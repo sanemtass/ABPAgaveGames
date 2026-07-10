@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: 79a4e78d4c38b434ea352f0569cf3fc5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6768848786345943227
+    second: Copy of gameIcon_0
+  - first:
+      213: 2849454745228381255
+    second: Copy of gameIcon_1
+  - first:
+      213: -6273152246409857185
+    second: Copy of gameIcon_2
+  - first:
+      213: -5376038799534579798
+    second: Copy of gameIcon_3
+  - first:
+      213: 4276232269498497264
+    second: Copy of gameIcon_4
+  - first:
+      213: 2083305984040571324
+    second: Copy of gameIcon_5
+  - first:
+      213: -103335061985424790
+    second: Copy of gameIcon_6
+  - first:
+      213: 5913658183937779845
+    second: Copy of gameIcon_7
+  - first:
+      213: 1395345267983919453
+    second: Copy of gameIcon_8
+  - first:
+      213: 4935347837926441439
+    second: Copy of gameIcon_9
+  - first:
+      213: 6846653763074401317
+    second: Copy of gameIcon_10
+  - first:
+      213: -4138896651992976962
+    second: Copy of gameIcon_11
+  - first:
+      213: -3776356779680157200
+    second: Copy of gameIcon_12
+  - first:
+      213: -3761998132422420071
+    second: Copy of gameIcon_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Copy of gameIcon_0
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 340
+        width: 130
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb0eb78bb18cfed50800000000000000
+      internalID: 6768848786345943227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_1
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 340
+        width: 119
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74c83e46efb4b8720800000000000000
+      internalID: 2849454745228381255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_2
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 340
+        width: 107
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f57fbcab44941f8a0800000000000000
+      internalID: -6273152246409857185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_3
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 196
+        width: 106
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf160ff1397465b0800000000000000
+      internalID: -5376038799534579798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_4
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 196
+        width: 95
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f83588b79a385b30800000000000000
+      internalID: 4276232269498497264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_5
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 194
+        width: 114
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb11f2131c369ec10800000000000000
+      internalID: 2083305984040571324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_6
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 194
+        width: 101
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6a04810f41e09ef0800000000000000
+      internalID: -103335061985424790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_7
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 196
+        width: 113
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58861b059c8811250800000000000000
+      internalID: 5913658183937779845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_8
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 50
+        width: 105
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d59243dd0234d5310800000000000000
+      internalID: 1395345267983919453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_9
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 48
+        width: 122
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd10992c5b0ed7440800000000000000
+      internalID: 4935347837926441439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_10
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 50
+        width: 93
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52424288253340f50800000000000000
+      internalID: 6846653763074401317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_11
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 50
+        width: 93
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb1b7ef7c6faf86c0800000000000000
+      internalID: -4138896651992976962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_12
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 50
+        width: 96
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f1b602548fa79bc0800000000000000
+      internalID: -3776356779680157200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Copy of gameIcon_13
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 50
+        width: 95
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 999574761a2bacbc0800000000000000
+      internalID: -3761998132422420071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Copy of gameIcon_0: 6768848786345943227
+      Copy of gameIcon_1: 2849454745228381255
+      Copy of gameIcon_10: 6846653763074401317
+      Copy of gameIcon_11: -4138896651992976962
+      Copy of gameIcon_12: -3776356779680157200
+      Copy of gameIcon_13: -3761998132422420071
+      Copy of gameIcon_2: -6273152246409857185
+      Copy of gameIcon_3: -5376038799534579798
+      Copy of gameIcon_4: 4276232269498497264
+      Copy of gameIcon_5: 2083305984040571324
+      Copy of gameIcon_6: -103335061985424790
+      Copy of gameIcon_7: 5913658183937779845
+      Copy of gameIcon_8: 1395345267983919453
+      Copy of gameIcon_9: 4935347837926441439
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

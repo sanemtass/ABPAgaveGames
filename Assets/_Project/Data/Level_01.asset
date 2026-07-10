@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 167abbd0dfee642d985d76abc886d037, type: 3}
+  m_Name: Level_01
+  m_EditorClassIdentifier: 
+  levelNumber: 1
+  gameBackgroundColor: {r: 1, g: 0.941, b: 0.859, a: 1}
+  frameColor: {r: 0.169, g: 0.169, b: 0.169, a: 1}
+  sourceImage: {fileID: 2800000, guid: 11f6683a2291b4d5f8905e33cb662656, type: 3}
+  gridWidth: 5
+  gridHeight: 5
+  moveCount: 15

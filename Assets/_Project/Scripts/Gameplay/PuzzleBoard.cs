@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using AgavePuzzle.Data;
@@ -9,15 +10,25 @@ namespace AgavePuzzle.Gameplay
     public class PuzzleBoard : MonoBehaviour
     {
         [Header("Level Configuration")]
-        [SerializeField] private LevelData levelData;
+        [SerializeField] private LevelSequence levelSequence;
 
         [Header("Board References")]
         [SerializeField] private RectTransform boardContainer;
         [SerializeField] private PuzzlePiece piecePrefab;
         [SerializeField] private Image backgroundImage;
 
+        [Header("Outer Frame")]
+        [SerializeField] private Image frameTop;
+        [SerializeField] private Image frameBottom;
+        [SerializeField] private Image frameLeft;
+        [SerializeField] private Image frameRight;
+
+        [Header("Animation")]
+        [SerializeField] private float snapDuration = 0.2f;
+
         private const float BoardAspectRatio = 9f / 16f;
 
+        private LevelData levelData;
         private int gridWidth;
         private int gridHeight;
         private BoardState boardState;
@@ -29,10 +40,12 @@ namespace AgavePuzzle.Gameplay
         public BoardState BoardState => boardState;
         public ConnectionEvaluator ConnectionEvaluator => connectionEvaluator;
         public MoveCounter MoveCounter => moveCounter;
+        public bool HasNextLevel => levelSequence.HasNextLevel(LevelProgress.CurrentLevelIndex);
 
         public event Action OnLevelWon;
         public event Action OnLevelLost;
         public event Action OnBoardInitialized;
+        public event Action<Vector2> OnConnectionMade;
 
         private void OnEnable()
         {
@@ -47,6 +60,7 @@ namespace AgavePuzzle.Gameplay
 
         private void Start()
         {
+            levelData = levelSequence.GetLevel(LevelProgress.CurrentLevelIndex);
             BuildBoard();
         }
 
@@ -106,8 +120,30 @@ namespace AgavePuzzle.Gameplay
                 }
             }
 
+            ApplyFrameColor();
+            BringFrameToFront();
+
             connectionEvaluator.RefreshAllConnections();
             OnBoardInitialized?.Invoke();
+        }
+
+        private void ApplyFrameColor()
+        {
+            Color frameColor = levelData.FrameColor;
+            frameTop.color = frameColor;
+            frameBottom.color = frameColor;
+            frameLeft.color = frameColor;
+            frameRight.color = frameColor;
+        }
+
+        private void BringFrameToFront()
+        {
+            // Frame bars exist in the scene before any piece is instantiated,
+            // so without this they would render behind the pieces.
+            frameTop.transform.SetAsLastSibling();
+            frameBottom.transform.SetAsLastSibling();
+            frameLeft.transform.SetAsLastSibling();
+            frameRight.transform.SetAsLastSibling();
         }
 
         private List<Sprite> SlicePuzzleImage(Texture2D sourceTexture, int columns, int rows)
@@ -176,6 +212,21 @@ namespace AgavePuzzle.Gameplay
             pieceRect.anchoredPosition = GetCellPosition(coordinate);
         }
 
+        private void AnimatePieceToPosition(PuzzlePiece piece, GridCoordinate coordinate)
+        {
+            Vector2 target = GetCellPosition(coordinate);
+            RectTransform pieceRect = piece.RectTransform;
+
+            if (pieceRect.anchoredPosition == target)
+            {
+                return;
+            }
+
+            pieceRect.DOAnchorPos(target, snapDuration)
+                .SetEase(Ease.OutQuad)
+                .SetLink(piece.gameObject);
+        }
+
         private void HandleGroupDropped(PieceDragHandler handler, GridCoordinate targetCoordinate)
         {
             if (isGameOver)
@@ -193,23 +244,30 @@ namespace AgavePuzzle.Gameplay
                 return;
             }
 
+            int groupSizeBefore = handler.DraggedGroup.Count;
+
             SyncAllPiecePositions();
             moveCounter.ConsumeMove();
             connectionEvaluator.RefreshAllConnections();
+
+            int groupSizeAfter =
+                connectionEvaluator.GetConnectedGroup(handler.Piece.CurrentCoordinate).Count;
+            if (groupSizeAfter > groupSizeBefore)
+            {
+                OnConnectionMade?.Invoke(GetCellPosition(handler.Piece.CurrentCoordinate));
+            }
+
             CheckGameEnd();
         }
 
         private void SyncAllPiecePositions()
         {
-            float cellWidth = boardContainer.rect.width / gridWidth;
-            float cellHeight = boardContainer.rect.height / gridHeight;
-
             foreach (GridCoordinate coordinate in boardState.GetAllCoordinates())
             {
                 PuzzlePiece pieceAtCell = boardState.GetPieceAt(coordinate);
                 if (pieceAtCell != null)
                 {
-                    PositionPiece(pieceAtCell, coordinate, cellWidth, cellHeight);
+                    AnimatePieceToPosition(pieceAtCell, coordinate);
                 }
             }
         }

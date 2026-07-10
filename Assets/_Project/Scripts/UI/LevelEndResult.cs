@@ -17,4 +17,10 @@ namespace AgavePuzzle.UI
         public override string HeaderText => "Out of Moves";
         public override string ButtonLabel => "Try Again";
     }
+
+    public class GameFinishedResult : LevelEndResult
+    {
+        public override string HeaderText => "All Levels Complete!";
+        public override string ButtonLabel => string.Empty;
+    }
 }

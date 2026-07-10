@@ -14,7 +14,9 @@ namespace AgavePuzzle.UI
         [SerializeField] private PuzzleBoard puzzleBoard;
 
         [Header("Sizing")]
-        [SerializeField] private float handSizeMultiplier = 1.3f;
+        [SerializeField] private float handSizeMultiplier = 1.1f;
+        [SerializeField] private float minHandWidth = 70f;
+        [SerializeField] private float maxHandWidth = 170f;
 
         [Header("Animation")]
         [SerializeField] private float fadeDuration = 0.25f;
@@ -57,11 +59,7 @@ namespace AgavePuzzle.UI
             puzzleBoard.MoveCounter.OnMovesChanged += HandleFirstMove;
             handRect.SetAsLastSibling();
 
-            Vector2 cellSize = puzzleBoard.GetCellSize();
-            float referenceSize = Mathf.Min(cellSize.x, cellSize.y);
-            float targetWidth = referenceSize * handSizeMultiplier;
-            float spriteAspect = handImage.sprite.rect.width / handImage.sprite.rect.height;
-            handRect.sizeDelta = new Vector2(targetWidth, targetWidth / spriteAspect);
+            ApplyHandSize();
 
             var swapFinder = new TutorialSwapFinder(
                 puzzleBoard.BoardState, puzzleBoard.ConnectionEvaluator);
@@ -76,6 +74,17 @@ namespace AgavePuzzle.UI
             }
         }
 
+        private void ApplyHandSize()
+        {
+            Vector2 cellSize = puzzleBoard.GetCellSize();
+            float referenceSize = Mathf.Min(cellSize.x, cellSize.y);
+            float targetWidth = Mathf.Clamp(
+                referenceSize * handSizeMultiplier, minHandWidth, maxHandWidth);
+
+            float spriteAspect = handImage.sprite.rect.width / handImage.sprite.rect.height;
+            handRect.sizeDelta = new Vector2(targetWidth, targetWidth / spriteAspect);
+        }
+
         private void HandleFirstMove(int movesRemaining)
         {
             puzzleBoard.MoveCounter.OnMovesChanged -= HandleFirstMove;
@@ -87,13 +96,16 @@ namespace AgavePuzzle.UI
         {
             handCanvasGroup.alpha = 0f;
 
-            // Built once, looped forever; killed on first move / disable (skill rule: reuse sequences).
             handSequence = DOTween.Sequence()
-                .AppendCallback(() => handRect.anchoredPosition = fromPosition)
+                .AppendCallback(() =>
+                {
+                    handRect.SetAsLastSibling();
+                    handRect.anchoredPosition = fromPosition;
+                })
                 .Append(handCanvasGroup.DOFade(1f, fadeDuration))
-                .Append(handRect.DOScale(pressScale, pressDuration))
+                .Append(handRect.DOScale(new Vector3(1.08f, pressScale, 1f), pressDuration))
                 .Append(handRect.DOAnchorPos(toPosition, moveDuration).SetEase(Ease.InOutQuad))
-                .Append(handRect.DOScale(1f, pressDuration))
+                .Append(handRect.DOScale(Vector3.one, pressDuration).SetEase(Ease.OutBack))
                 .Append(handCanvasGroup.DOFade(0f, fadeDuration))
                 .AppendInterval(loopPause)
                 .SetLoops(-1)

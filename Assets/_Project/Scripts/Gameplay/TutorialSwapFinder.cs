@@ -40,7 +40,12 @@ namespace AgavePuzzle.Gameplay
                     {
                         continue;
                     }
-
+                    // Target must also be a single piece: pointing the player at a cell
+                    // inside an already-connected group would teach them to break it.
+                    if (connectionEvaluator.GetConnectedGroup(b).Count != 1)
+                    {
+                        continue;
+                    }
                     if (SwapCreatesNewConnection(a, b))
                     {
                         from = a;

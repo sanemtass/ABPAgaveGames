@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,6 +12,14 @@ namespace AgavePuzzle.Gameplay
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public static event Action<PieceDragHandler, GridCoordinate> OnGroupDropped;
+        public static event Action OnDragStarted;
+
+        [Header("Return Animation")]
+        [SerializeField] private float returnDuration = 0.25f;
+
+        [Header("Lift Animation")]
+        [SerializeField] private float liftScale = 1.06f;
+        [SerializeField] private float liftDuration = 0.12f;
 
         private PuzzlePiece piece;
         private CanvasGroup canvasGroup;
@@ -41,6 +50,8 @@ namespace AgavePuzzle.Gameplay
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            OnDragStarted?.Invoke();
+
             draggedGroup.Clear();
             groupStartPositions.Clear();
 
@@ -50,8 +61,15 @@ namespace AgavePuzzle.Gameplay
 
             foreach (PuzzlePiece groupPiece in draggedGroup)
             {
-                groupStartPositions.Add(groupPiece.RectTransform.anchoredPosition);
-                groupPiece.RectTransform.SetAsLastSibling();
+                RectTransform pieceRect = groupPiece.RectTransform;
+                pieceRect.DOKill();
+                pieceRect.localScale = Vector3.one;
+                groupStartPositions.Add(pieceRect.anchoredPosition);
+                pieceRect.SetAsLastSibling();
+
+                pieceRect.DOScale(liftScale, liftDuration)
+                    .SetEase(Ease.OutQuad)
+                    .SetLink(pieceRect.gameObject);
             }
 
             canvasGroup.blocksRaycasts = false;
@@ -82,6 +100,13 @@ namespace AgavePuzzle.Gameplay
         {
             canvasGroup.blocksRaycasts = true;
 
+            foreach (PuzzlePiece groupPiece in draggedGroup)
+            {
+                groupPiece.RectTransform.DOScale(1f, liftDuration)
+                    .SetEase(Ease.OutQuad)
+                    .SetLink(groupPiece.RectTransform.gameObject);
+            }
+
             GridCoordinate targetCoordinate = CalculateTargetCoordinate();
             OnGroupDropped?.Invoke(this, targetCoordinate);
         }
@@ -90,7 +115,12 @@ namespace AgavePuzzle.Gameplay
         {
             for (int i = 0; i < draggedGroup.Count; i++)
             {
-                draggedGroup[i].RectTransform.anchoredPosition = groupStartPositions[i];
+                RectTransform pieceRect = draggedGroup[i].RectTransform;
+                pieceRect.DOKill();
+                pieceRect.localScale = Vector3.one;
+                pieceRect.DOAnchorPos(groupStartPositions[i], returnDuration)
+                    .SetEase(Ease.OutBack)
+                    .SetLink(pieceRect.gameObject);
             }
         }
 

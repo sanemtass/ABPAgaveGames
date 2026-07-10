@@ -17,5 +17,5 @@ MonoBehaviour:
   frameColor: {r: 0.169, g: 0.169, b: 0.169, a: 1}
   sourceImage: {fileID: 2800000, guid: 11f6683a2291b4d5f8905e33cb662656, type: 3}
   gridWidth: 5
-  gridHeight: 5
+  gridHeight: 4
   moveCount: 15

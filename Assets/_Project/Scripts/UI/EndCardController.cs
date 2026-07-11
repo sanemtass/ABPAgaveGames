@@ -59,11 +59,24 @@ namespace AgavePuzzle.UI
             endCardRoot.SetActive(true);
             endCardCanvasGroup.alpha = 0f;
             gameIconRect.localScale = Vector3.zero;
+            headerText.transform.localScale = Vector3.zero;
+            actionButton.transform.localScale = Vector3.zero;
 
-            endCardCanvasGroup.DOFade(1f, fadeDuration).SetLink(endCardRoot);
-            gameIconRect.DOScale(1f, fadeDuration * 1.5f)
-                .SetEase(Ease.OutBack)
+            DOTween.Sequence()
+                .Append(endCardCanvasGroup.DOFade(1f, fadeDuration))
+                .Append(gameIconRect.DOScale(1f, 0.4f).SetEase(Ease.OutBack))
+                .Append(headerText.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack))
+                .Append(actionButton.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack))
+                .OnComplete(StartButtonPulse)
                 .SetLink(endCardRoot);
+        }
+
+        private void StartButtonPulse()
+        {
+            actionButton.transform.DOScale(1.05f, 0.5f)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine)
+                .SetLink(actionButton.gameObject);
         }
 
         private void LoadNextLevel()

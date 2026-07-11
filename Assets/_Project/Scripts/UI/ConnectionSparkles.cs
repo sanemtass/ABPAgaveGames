@@ -16,8 +16,6 @@ namespace AgavePuzzle.UI
 
         private void Awake()
         {
-            // Single reusable instance: bursts are short and infrequent,
-            // so one system is enough (no pool of systems needed).
             burstInstance = Instantiate(burstPrefab);
         }
 
@@ -33,11 +31,8 @@ namespace AgavePuzzle.UI
 
         private void PlayBurst(Vector2 boardPosition)
         {
-            // GetCellPosition gives a point in boardContainer's local space;
-            // TransformPoint converts it to world space for the particle system.
             Vector3 worldPosition = boardContainer.TransformPoint(boardPosition);
 
-            // Nudge toward the camera so the burst spawns in front of the canvas plane.
             worldPosition.z -= 0.5f;
 
             burstInstance.transform.position = worldPosition;

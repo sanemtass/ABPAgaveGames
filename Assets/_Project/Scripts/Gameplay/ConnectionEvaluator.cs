@@ -46,8 +46,6 @@ namespace AgavePuzzle.Gameplay
             }
         }
 
-        /// Returns the group of pieces connected to the piece at the given coordinate.
-        /// Note: returns a shared internal buffer; copy it if you need to keep the result.
         public IReadOnlyList<PuzzlePiece> GetConnectedGroup(GridCoordinate startCoordinate)
         {
             groupBuffer.Clear();
@@ -90,15 +88,11 @@ namespace AgavePuzzle.Gameplay
 
             return groupBuffer;
         }
-
-        /// Two adjacent pieces are connected when they are in their
-        /// correct positions relative to each other.
+        
         private bool IsConnected(PuzzlePiece piece, GridCoordinate coordinate, GridCoordinate direction)
         {
             GridCoordinate neighborCoordinate = coordinate + direction;
 
-            // GetPieceAt returns null for out-of-bounds coordinates,
-            // so no separate bounds check is needed here.
             PuzzlePiece neighborPiece = boardState.GetPieceAt(neighborCoordinate);
             if (neighborPiece == null)
             {

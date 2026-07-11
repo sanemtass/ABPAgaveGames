@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 namespace AgavePuzzle.Gameplay
 {
+    /// Handles pointer drag for a piece. Dragging always moves the piece's
+    /// whole connected group; the drop result is decided by PuzzleBoard.
     [RequireComponent(typeof(PuzzlePiece))]
     [RequireComponent(typeof(CanvasGroup))]
     public class PieceDragHandler : MonoBehaviour,
@@ -62,8 +64,12 @@ namespace AgavePuzzle.Gameplay
             foreach (PuzzlePiece groupPiece in draggedGroup)
             {
                 RectTransform pieceRect = groupPiece.RectTransform;
+
+                // DOKill leaves a half-finished tween wherever it was, so reset
+                // scale explicitly or rapid re-drags accumulate a wrong size.
                 pieceRect.DOKill();
                 pieceRect.localScale = Vector3.one;
+
                 groupStartPositions.Add(pieceRect.anchoredPosition);
                 pieceRect.SetAsLastSibling();
 
@@ -71,7 +77,7 @@ namespace AgavePuzzle.Gameplay
                     .SetEase(Ease.OutQuad)
                     .SetLink(pieceRect.gameObject);
             }
-
+            
             canvasGroup.blocksRaycasts = false;
 
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -116,14 +122,20 @@ namespace AgavePuzzle.Gameplay
             for (int i = 0; i < draggedGroup.Count; i++)
             {
                 RectTransform pieceRect = draggedGroup[i].RectTransform;
+
+                // Same reset as in OnBeginDrag: killing the shrink tween mid-way
+                // would otherwise strand the piece at a partial scale.
                 pieceRect.DOKill();
                 pieceRect.localScale = Vector3.one;
+
                 pieceRect.DOAnchorPos(groupStartPositions[i], returnDuration)
                     .SetEase(Ease.OutBack)
                     .SetLink(pieceRect.gameObject);
             }
         }
 
+        /// Maps the dragged piece's center to a grid cell. Assumes a
+        /// middle-center pivot/anchor on the piece (set on the prefab).
         private GridCoordinate CalculateTargetCoordinate()
         {
             float boardWidth = boardRectTransform.rect.width;

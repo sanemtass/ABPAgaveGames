@@ -7,6 +7,8 @@ using AgavePuzzle.Data;
 
 namespace AgavePuzzle.Gameplay
 {
+    /// Owns the board lifecycle: builds the level, wires the plain C# logic
+    /// services together, and reacts to drops reported by PieceDragHandler.
     public class PuzzleBoard : MonoBehaviour
     {
         [Header("Level Configuration")]
@@ -14,18 +16,16 @@ namespace AgavePuzzle.Gameplay
 
         [Header("Board References")]
         [SerializeField] private RectTransform boardContainer;
+        [SerializeField] private RectTransform celebrationRoot;
         [SerializeField] private PuzzlePiece piecePrefab;
         [SerializeField] private Image backgroundImage;
 
-        [Header("Outer Frame")]
-        [SerializeField] private Image frameTop;
-        [SerializeField] private Image frameBottom;
-        [SerializeField] private Image frameLeft;
-        [SerializeField] private Image frameRight;
-
         [Header("Animation")]
         [SerializeField] private float snapDuration = 0.2f;
+        [SerializeField] private float winCelebrationDuration = 1.5f;
 
+        // The case requires the puzzle area to be 9:16 regardless of the
+        // source image's own aspect ratio; SlicePuzzleImage crops to this.
         private const float BoardAspectRatio = 9f / 16f;
 
         private LevelData levelData;
@@ -36,6 +36,7 @@ namespace AgavePuzzle.Gameplay
         private GroupSwapService groupSwapService;
         private MoveCounter moveCounter;
         private bool isGameOver;
+        private readonly List<Sprite> createdSprites = new List<Sprite>();
 
         public BoardState BoardState => boardState;
         public ConnectionEvaluator ConnectionEvaluator => connectionEvaluator;
@@ -67,6 +68,8 @@ namespace AgavePuzzle.Gameplay
         public Vector2 GetCellSize() =>
             new Vector2(boardContainer.rect.width / gridWidth, boardContainer.rect.height / gridHeight);
 
+        /// Cell center in boardContainer's local space. Anything positioned with
+        /// this value must be a child of boardContainer to land correctly.
         public Vector2 GetCellPosition(GridCoordinate coordinate)
         {
             float cellWidth = boardContainer.rect.width / gridWidth;
@@ -80,6 +83,9 @@ namespace AgavePuzzle.Gameplay
 
         private void BuildBoard()
         {
+            // The board sizes cells from boardContainer.rect, which is driven by
+            // the AspectRatioFitter; force a layout pass so the rect is final
+            // before any cell math happens.
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(boardContainer);
 
@@ -96,6 +102,7 @@ namespace AgavePuzzle.Gameplay
             }
 
             List<Sprite> pieceSprites = SlicePuzzleImage(levelData.SourceImage, gridWidth, gridHeight);
+            createdSprites.AddRange(pieceSprites);
             List<GridCoordinate> shuffledCoordinates = GenerateShuffledCoordinates(gridWidth, gridHeight);
 
             float cellWidth = boardContainer.rect.width / gridWidth;
@@ -120,32 +127,12 @@ namespace AgavePuzzle.Gameplay
                 }
             }
 
-            ApplyFrameColor();
-            BringFrameToFront();
-
             connectionEvaluator.RefreshAllConnections();
             OnBoardInitialized?.Invoke();
         }
 
-        private void ApplyFrameColor()
-        {
-            Color frameColor = levelData.FrameColor;
-            frameTop.color = frameColor;
-            frameBottom.color = frameColor;
-            frameLeft.color = frameColor;
-            frameRight.color = frameColor;
-        }
-
-        private void BringFrameToFront()
-        {
-            // Frame bars exist in the scene before any piece is instantiated,
-            // so without this they would render behind the pieces.
-            frameTop.transform.SetAsLastSibling();
-            frameBottom.transform.SetAsLastSibling();
-            frameLeft.transform.SetAsLastSibling();
-            frameRight.transform.SetAsLastSibling();
-        }
-
+        /// Cuts the source texture into grid cells after center-cropping it to
+        /// the board's 9:16 ratio, so the image is never stretched or squashed.
         private List<Sprite> SlicePuzzleImage(Texture2D sourceTexture, int columns, int rows)
         {
             var sprites = new List<Sprite>();
@@ -171,6 +158,8 @@ namespace AgavePuzzle.Gameplay
             {
                 for (int column = 0; column < columns; column++)
                 {
+                    // Row 0 is the top of the board, but texture coordinates start
+                    // at the bottom -- hence the inverted Y math.
                     int xMin = Mathf.RoundToInt(offsetX + column * cropWidth / columns);
                     int xMax = Mathf.RoundToInt(offsetX + (column + 1) * cropWidth / columns);
 
@@ -196,13 +185,33 @@ namespace AgavePuzzle.Gameplay
                 }
             }
 
-            for (int i = coordinates.Count - 1; i > 0; i--)
+            // Reshuffle until at least one piece is out of place; a fully solved
+            // start is possible by pure chance (quite likely on small grids like 2x2).
+            do
             {
-                int randomIndex = UnityEngine.Random.Range(0, i + 1);
-                (coordinates[i], coordinates[randomIndex]) = (coordinates[randomIndex], coordinates[i]);
+                for (int i = coordinates.Count - 1; i > 0; i--)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, i + 1);
+                    (coordinates[i], coordinates[randomIndex]) = (coordinates[randomIndex], coordinates[i]);
+                }
             }
+            while (IsSolvedArrangement(coordinates, columns));
 
             return coordinates;
+        }
+
+        private static bool IsSolvedArrangement(List<GridCoordinate> shuffled, int columns)
+        {
+            for (int i = 0; i < shuffled.Count; i++)
+            {
+                GridCoordinate correct = new GridCoordinate(i / columns, i % columns);
+                if (shuffled[i] != correct)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void PositionPiece(PuzzlePiece piece, GridCoordinate coordinate, float cellWidth, float cellHeight)
@@ -217,6 +226,8 @@ namespace AgavePuzzle.Gameplay
             Vector2 target = GetCellPosition(coordinate);
             RectTransform pieceRect = piece.RectTransform;
 
+            // Most pieces don't move in a swap; skip them instead of starting
+            // tweens that would do nothing.
             if (pieceRect.anchoredPosition == target)
             {
                 return;
@@ -237,6 +248,8 @@ namespace AgavePuzzle.Gameplay
 
             GridCoordinate delta = targetCoordinate - handler.Piece.CurrentCoordinate;
 
+            // Zero delta or an invalid swap both return the group without
+            // consuming a move (case rule).
             if (delta == new GridCoordinate(0, 0) ||
                 !groupSwapService.TryExecuteGroupSwap(handler.DraggedGroup, delta))
             {
@@ -250,6 +263,8 @@ namespace AgavePuzzle.Gameplay
             moveCounter.ConsumeMove();
             connectionEvaluator.RefreshAllConnections();
 
+            // If the dragged piece's group grew, this swap created at least one
+            // new connection -- fire the event for VFX/SFX listeners.
             int groupSizeAfter =
                 connectionEvaluator.GetConnectedGroup(handler.Piece.CurrentCoordinate).Count;
             if (groupSizeAfter > groupSizeBefore)
@@ -277,12 +292,60 @@ namespace AgavePuzzle.Gameplay
             if (boardState.AreAllPiecesCorrect())
             {
                 isGameOver = true;
-                OnLevelWon?.Invoke();
+                PlayWinCelebration();
             }
             else if (moveCounter.MovesRemaining <= 0)
             {
                 isGameOver = true;
-                OnLevelLost?.Invoke();
+                PlayLossDelay();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // Sprites made with Sprite.Create are not scene objects, so Unity never
+            // cleans them up on scene reload; destroy them manually to avoid leaking
+            // memory across level restarts.
+            foreach (Sprite sprite in createdSprites)
+            {
+                Destroy(sprite);
+            }
+        }
+
+        private void PlayLossDelay()
+        {
+            SetPiecesInteractable(false);
+
+            DOTween.Sequence()
+                .AppendInterval(snapDuration + 0.5f)
+                .AppendCallback(() => OnLevelLost?.Invoke())
+                .SetLink(gameObject);
+        }
+
+        private void PlayWinCelebration()
+        {
+            SetPiecesInteractable(false);
+
+            DOTween.Sequence()
+                .AppendInterval(snapDuration)
+                .Append(celebrationRoot.DOScale(1.03f, 0.25f).SetEase(Ease.OutQuad))
+                .Append(celebrationRoot.DOScale(1f, 0.35f).SetEase(Ease.OutBack))
+                .AppendInterval(winCelebrationDuration)
+                .AppendCallback(() => OnLevelWon?.Invoke())
+                .SetLink(gameObject);
+        }
+
+        /// isGameOver only blocks drops; this also blocks picking pieces up,
+        /// so nothing can be dragged during the end-of-level sequence.
+        private void SetPiecesInteractable(bool interactable)
+        {
+            foreach (GridCoordinate coordinate in boardState.GetAllCoordinates())
+            {
+                PuzzlePiece piece = boardState.GetPieceAt(coordinate);
+                if (piece != null)
+                {
+                    piece.GetComponent<CanvasGroup>().blocksRaycasts = interactable;
+                }
             }
         }
     }

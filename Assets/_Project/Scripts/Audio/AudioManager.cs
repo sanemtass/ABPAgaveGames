@@ -3,8 +3,6 @@ using AgavePuzzle.Gameplay;
 
 namespace AgavePuzzle.Audio
 {
-    /// Central place for playing game sounds. Listens to gameplay events
-    /// so gameplay code itself stays audio-agnostic.
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private PuzzleBoard puzzleBoard;
@@ -17,17 +15,20 @@ namespace AgavePuzzle.Audio
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private AudioClip pickupClip;
         [SerializeField] private AudioClip connectClip;
+        [SerializeField] private AudioClip loseClip;
 
         private void OnEnable()
         {
             PieceDragHandler.OnDragStarted += PlayPickup;
             puzzleBoard.OnConnectionMade += HandleConnectionMade;
+            puzzleBoard.OnLevelLost += PlayLose;
         }
 
         private void OnDisable()
         {
             PieceDragHandler.OnDragStarted -= PlayPickup;
             puzzleBoard.OnConnectionMade -= HandleConnectionMade;
+            puzzleBoard.OnLevelLost -= PlayLose;
         }
 
         private void Start()
@@ -55,6 +56,14 @@ namespace AgavePuzzle.Audio
             if (connectClip != null)
             {
                 sfxSource.PlayOneShot(connectClip);
+            }
+        }
+        
+        private void PlayLose()
+        {
+            if (loseClip != null)
+            {
+                sfxSource.PlayOneShot(loseClip);
             }
         }
     }

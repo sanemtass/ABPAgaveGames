@@ -16,6 +16,6 @@ MonoBehaviour:
   gameBackgroundColor: {r: 1, g: 0.941, b: 0.859, a: 1}
   frameColor: {r: 0.169, g: 0.169, b: 0.169, a: 1}
   sourceImage: {fileID: 2800000, guid: f881a7a4b759943ae97f3556309e4006, type: 3}
-  gridWidth: 3
-  gridHeight: 4
+  gridWidth: 5
+  gridHeight: 5
   moveCount: 15
